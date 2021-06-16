@@ -1,0 +1,16 @@
+{
+  "name": "server-graphql-logex",
+  "version": "1.0.0",
+  "description": "GraphQl server for Logex application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "apollo-server": "^2.25.1",
+    "graphql": "^15.5.0"
+  },
+  "devDependencies": {},
+  "author": "Jonathan Gil",
+  "license": "ISC"
+}

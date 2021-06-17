@@ -1,16 +1,9 @@
+const fs = require("fs");
 const { ApolloServer, gql } = require("apollo-server");
 
-const typeDefs = gql`
-  type Query {
-    greeting: String
-  }
-`;
+const typeDefs = gql(fs.readFileSync("./src/graphql/schema.graphql", { encoding: "utf8" }));
+const resolvers = require('./src/graphql/resolvers');
 
-const resolvers = {
-  Query: {
-    greeting: () => "Hello GraphQL world!",
-  },
-};
 
 const server = new ApolloServer({ typeDefs, resolvers });
 server.listen({ port: 9000 }).then((serverInfo) => {

@@ -1,0 +1,55 @@
+type Query {
+  expos: [Expo]
+}
+
+type Expo {
+  id: ID!
+  consecutivo: String!
+  customerName: String
+  destinationCountry: String
+  puertoDestino: String
+  transportMode: String
+  customerId: String
+  booking: Booking
+  selectedShipping: String
+  status: String
+  globalProgress: Int
+  createdAt: Int
+}
+
+type Booking {
+  id: ID!
+  bookingNumber: String
+  consignee: String
+  notify: String
+  shippingCompany: String
+  broker: String
+  # transportMode: ModoTransporte
+  # puertoZarpe: IPuertoZarpe
+  destinationCountry: String
+  destinationCity: String  
+  transportDocumentId: String
+  eta: Int
+  etd: Int
+  etaDestination: Int
+  documentsDeadline: Int
+  physicalLeadtime: Int
+  containerList: [Container]
+}
+
+type Container {
+  id: String
+  expoId: String
+  containerNumber: String
+  vehiculoId: String
+  transportName: String
+  bookingId: String
+  # type: ContainerType
+  dateYardWithdraw: Int
+  dateLoad: Int
+  dateEnterPort: Int
+  dateDeparture: Int
+  netWeight: Int
+  grossWeight: Int
+  createdAt: Int
+}

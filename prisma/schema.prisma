@@ -29,7 +29,7 @@ model Course {
   courseDetails String
   userId        Int?
   members       CourseEnrollment[]
-  test          Test[]
+  tests          Test[]
 }
 
 model Test {

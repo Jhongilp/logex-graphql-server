@@ -4,7 +4,9 @@
   "description": "GraphQl server for Logex application",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "ts-node": "./node_modules/.bin/ts-node ./prisma/seed.ts",
+    "prisma-reset": "npx prisma db push --force-reset"
   },
   "dependencies": {
     "@prisma/client": "2.25.0",

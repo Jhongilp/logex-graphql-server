@@ -1,33 +1,82 @@
+scalar Date
+
 type Query {
   expos: [Expo]
+  customers: [Customer]
+}
+
+type Mutation {
+  createExpo(input: CreateExpoInput): Expo
+  createCustomer(input: CreateCustomerInput): Customer
+}
+
+input CreateExpoInput {
+  consecutivo: String
+  customerId: String
+  transportMode: String
+}
+
+input CreateCustomerInput {
+  name: String
+  country: String
+  city: String
+  address: String
 }
 
 type Expo {
   id: ID!
   consecutivo: String!
-  customerName: String
-  destinationCountry: String
-  puertoDestino: String
-  transportMode: String
-  customerId: String
+  transportMode: String!
+  customer: Customer
   booking: Booking
-  selectedShipping: String
   status: String
   globalProgress: Int
-  createdAt: Int
+  createdAt: Date
+}
+
+type Customer {
+  id: ID!
+  name: String!
+  country: String!
+  city: String!
+  address: String!
+}
+
+type Supplier {
+  id: ID!
+  name: String
+  role: String # broker, customs agency, transport, etc
+  contacts: [Contact]
+}
+
+type Contact {
+  id: ID!
+  company: Supplier!
+  position: String
+  email: String!
+  phone: String!
+}
+
+type ShippingInstruction {
+  id: ID!
+  country: String!
+  city: String!
+  consigneePhone: String!
+  consigneeEmail: String!
+  deliveryAddress: String!
+  notifyName: String
+  notifyPhone: String
+  notifyEmail: String
+  instructions: String
 }
 
 type Booking {
   id: ID!
   bookingNumber: String
-  consignee: String
-  notify: String
-  shippingCompany: String
-  broker: String
-  # transportMode: ModoTransporte
-  # puertoZarpe: IPuertoZarpe
-  destinationCountry: String
-  destinationCity: String  
+  shippingInstruction: ShippingInstruction!
+  shippingCompany: Supplier
+  broker: Supplier
+  transportMode: String!
   transportDocumentId: String
   eta: Int
   etd: Int
@@ -38,18 +87,18 @@ type Booking {
 }
 
 type Container {
-  id: String
-  expoId: String
-  containerNumber: String
+  id: String!
+  expoId: String!
+  containerNumber: String!
   vehiculoId: String
   transportName: String
-  bookingId: String
-  # type: ContainerType
+  booking: Booking!
+  type: String!
   dateYardWithdraw: Int
   dateLoad: Int
   dateEnterPort: Int
   dateDeparture: Int
   netWeight: Int
   grossWeight: Int
-  createdAt: Int
+  createdAt: Int!
 }

@@ -10,63 +10,115 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// User can be a student or a teacher
-model User {
-  id        Int                @id @default(autoincrement())
-  email     String             @unique
-  fisrtName String
-  lastName  String
-  social    Json?
-  courses   CourseEnrollment[]
-
-  testsResults TestResult[] @relation(name: "results")
-  testsGraded  TestResult[] @relation(name: "graded")
+model Export {
+  id               String            @id
+  consecutivo      String            @unique
+  customerId       String
+  transportMode    String?
+  status           String
+  globalProgress   Int
+  createdAt        DateTime          @default(now())
+  
+  booking          Booking[]
+  suppliers        SupplierService[]
+  customer         Customer          @relation(fields: [customerId], references: [id])
 }
 
-model Course {
-  id            Int                @id @default(autoincrement())
-  name          String
-  courseDetails String
-  userId        Int?
-  members       CourseEnrollment[]
-  tests          Test[]
+model Customer {
+  id      String   @id
+  name    String
+  country String
+  city    String
+  address String
+  exports Export[]
 }
 
-model Test {
-  id          Int          @id @default(autoincrement())
-  updateAt    DateTime     @updatedAt
-  name        String
-  date        DateTime
-  courseId    Int?
-  course      Course?      @relation(fields: [courseId], references: [id])
-  testResults TestResult[]
+model ShippingInstruction {
+  id              String    @id
+  bookings        Booking[]
+  consigneeName   String
+  country         String
+  city            String
+  consigneePhone  String
+  consigneeEmail  String
+  deliveryAddress String
+  notifyName      String
+  notifyPhone     String
+  instructions    String
 }
 
-model TestResult {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  result    Int
-  testId    Int?
-  test      Test?    @relation(fields: [testId], references: [id])
+model Booking {
+  id                  String      @id
+  bookingNumber       String
+  shippingId          String?
+  // broker              Supplier
+  transportDocumentId String
+  eta                 DateTime
+  etd                 DateTime
+  etaDestination      DateTime
+  documentsDeadline   DateTime
+  physicalLeadtime    DateTime
+  containerList       Container[]
 
-  studentId Int
-  student   User @relation(name: "results", fields: [studentId], references: [id])
-  graderId Int
-  gradedBy  User @relation(name: "graded", fields: [graderId], references: [id])
+  exportId              String?
+  shippingInstructionId String?
+  Export                Export?              @relation(fields: [exportId], references: [id])
+  ShippingInstruction   ShippingInstruction? @relation(fields: [shippingInstructionId], references: [id])
 }
 
-model CourseEnrollment {
-  createdAt DateTime @default(now())
-  role      UserRole
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  courseId  Int
-  course    Course   @relation(fields: [courseId], references: [id])
-
-  @@id([userId, courseId, role])
+model Supplier {
+  id         String             @id
+  name       String
+  role       String
+  contacts   Contact[]
+  exports    SupplierService[]
+  containers TransportService[]
 }
 
-enum UserRole {
-  STUDENT
-  TEACHER
+model SupplierService {
+  role       String
+  expoId     String
+  supplierId String
+  export     Export   @relation(fields: [expoId], references: [id])
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  @@id([expoId, supplierId])
+}
+
+model Contact {
+  id         String    @id
+  companyId  String
+  position   String
+  email      String    @unique
+  phone      String
+  supplierId String?
+  Supplier   Supplier? @relation(fields: [supplierId], references: [id])
+}
+
+// we could make the relation using the vehicule instead?
+model TransportService {
+  containerId String
+  supplierId  String
+  container   Container @relation(fields: [containerId], references: [id])
+  Supplier    Supplier  @relation(fields: [supplierId], references: [id])
+
+  @@id([containerId, supplierId])
+}
+
+model Container {
+  id               String             @id
+  containerNumber  String             @unique
+  vehiculoId       String
+  transportId      String
+  type             String
+  dateYardWithdraw DateTime
+  dateLoad         DateTime
+  dateEnterPort    DateTime
+  dateDeparture    DateTime
+  netWeight        Float
+  grossWeight      Float
+  createdAt        DateTime           @default(now())
+  bookingId        String?
+  Booking          Booking?           @relation(fields: [bookingId], references: [id])
+  TransportService TransportService[]
 }

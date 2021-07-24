@@ -1,5 +1,5 @@
-const { GraphQLScalarType, Kind } = require("graphql");
-const { v4: uuidv4 } = require("uuid");
+import { GraphQLScalarType, Kind } from "graphql"
+import { v4 as uuidv4 } from "uuid";
 
 const dateScalar = new GraphQLScalarType({
   name: "Date",
@@ -56,11 +56,12 @@ const Mutation = {
   },
 
   createCustomer: async (_root, args, { prisma }) => {
-    const { name, country, city, address } = args.input;
+    const { id, name, country, city, address } = args.input;
     console.log("[create customer] args input: ", args.input);
     const customer = await prisma.customer.create({
       data: {
-        id: uuidv4(),
+        // id: uuidv4(),
+        id,
         name,
         country,
         city,
@@ -71,7 +72,7 @@ const Mutation = {
   },
 };
 
-module.exports = {
+export default {
   Date: dateScalar,
   Query,
   Mutation,

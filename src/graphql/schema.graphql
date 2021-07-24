@@ -17,9 +17,10 @@ input CreateExpoInput {
 }
 
 input CreateCustomerInput {
-  name: String
-  country: String
-  city: String
+  id: ID!
+  name: String!
+  country: String!
+  city: String!
   address: String
 }
 

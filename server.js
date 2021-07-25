@@ -47,7 +47,8 @@ const prisma = new PrismaClient();
 
   const subscriptionServer = SubscriptionServer.create(
     { schema, execute, subscribe },
-    { server: httpServer, path: server.graphqlPath }
+    // { server: httpServer, path: server.graphqlPath }
+    { server: httpServer, path: "/graphql" }
   );
 
   // Shut down in the case of interrupt and termination signals

@@ -1,5 +1,9 @@
 scalar Date
 
+type Subscription {
+  customerCreated: Customer
+}
+
 type Query {
   expos: [Expo]
   customers: [Customer]

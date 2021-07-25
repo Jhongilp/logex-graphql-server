@@ -1,5 +1,10 @@
 import { GraphQLScalarType, Kind } from "graphql"
+import { PubSub } from "graphql-subscriptions"
 import { v4 as uuidv4 } from "uuid";
+
+const pubsub = new PubSub();
+
+const CUSTOMER_CREATED = "CUSTOMER_CREATED";
 
 const dateScalar = new GraphQLScalarType({
   name: "Date",
@@ -68,13 +73,22 @@ const Mutation = {
         address,
       },
     });
+    pubsub.publish(CUSTOMER_CREATED, { customerCreated: customer})
     return customer;
   },
 };
 
+const Subscription = {
+  customerCreated: {
+    subscribe: () => pubsub.asyncIterator([CUSTOMER_CREATED])
+  }
+}
+
+
 export default {
   Date: dateScalar,
+  Expo,
   Query,
   Mutation,
-  Expo,
+  Subscription
 };
